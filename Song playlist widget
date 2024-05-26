@@ -412,14 +412,13 @@ body
         </div>
     </div>
 
-
 <!-- <a href="https://www.youtube.com/channel/UC7hSS_eujjZOEQrjsda76gA/videos" target="_blank" id="ytd-url">My YouTube Channel</a> -->
   
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script type="text/javascript">
     $(function()
 {
-    var playerTrack = $("#player-track"), bgArtwork = $('#bg-artwork'), bgArtworkUrl, albumName = $('24/7, 365'), trackName = $('elijah woods'), albumArt = $('#album-art'), sArea = $('#s-area'), seekBar = $('#seek-bar'), trackTime = $('#track-time'), insTime = $('#ins-time'), sHover = $('#s-hover'), playPauseButton = $("#play-pause-button"),  i = playPauseButton.find('i'), tProgress = $('#current-time'), tTime = $('#track-length'), seekT, seekLoc, seekBarPos, cM, ctMinutes, ctSeconds, curMinutes, curSeconds, durMinutes, durSeconds, playProgress, bTime, nTime = 0, buffInterval = null, tFlag = false, albums = ['my magic shop','Me & You','Electro Boy','Home','Proxy (Original Mix)'], trackNames = ['you gave me the best of me','Alex Skrindo - Me & You','Kaaze - Electro Boy','Jordan Schor - Home','Martin Garrix - Proxy'], albumArtworks = ['_1','_2','_3','_4','_5'], trackUrl = ['https://raw.githubusercontent.com/yerinsally/notion/main247365.mp3'], playPreviousTrackButton = $('#play-previous'), playNextTrackButton = $('#play-next'), currIndex = -1;
+    var playerTrack = $("#player-track"), bgArtwork = $('#bg-artwork'), bgArtworkUrl, albumName = $('#album-name'), trackName = $('#track-name'), albumArt = $('#album-art'), sArea = $('#s-area'), seekBar = $('#seek-bar'), trackTime = $('#track-time'), insTime = $('#ins-time'), sHover = $('#s-hover'), playPauseButton = $("#play-pause-button"),  i = playPauseButton.find('i'), tProgress = $('#current-time'), tTime = $('#track-length'), seekT, seekLoc, seekBarPos, cM, ctMinutes, ctSeconds, curMinutes, curSeconds, durMinutes, durSeconds, playProgress, bTime, nTime = 0, buffInterval = null, tFlag = false, albums = ['24/7, 365'], trackNames = ['elijah woods'], albumArtworks = ['_1'], trackUrl = ['https://raw.githubusercontent.com/yerinsally/notion/main/247365.mp3'], playPreviousTrackButton = $('#play-previous'), playNextTrackButton = $('#play-next'), currIndex = -1;
 
     function playPause()
     {
@@ -432,6 +431,9 @@ body
                 checkBuffering();
                 i.attr('class','fas fa-pause');
                 audio.play();
+                audio.addEventListener('ended', function() {
+document.getElementById("play-next").click();
+}, false);
             }
             else
             {
@@ -530,13 +532,10 @@ body
             tTime.text('00:00');
         else
                     tTime.text(durMinutes+':'+durSeconds);
-        
         if( isNaN(curMinutes) || isNaN(curSeconds) || isNaN(durMinutes) || isNaN(durSeconds) )
             trackTime.removeClass('active');
         else
             trackTime.addClass('active');
-
-        
                 seekBar.width(playProgress+'%');
                 
                 if( playProgress == 100 )
@@ -548,7 +547,7 @@ body
             clearInterval(buffInterval);
                 }
     }
-    
+ 
     function checkBuffering()
     {
         clearInterval(buffInterval);
@@ -592,7 +591,6 @@ body
             currArtwork = albumArtworks[currIndex];
 
             audio.src = trackUrl[currIndex];
-            
             nTime = 0;
             bTime = new Date();
             bTime = bTime.getTime();
@@ -602,17 +600,13 @@ body
                 audio.play();
                 playerTrack.addClass('active');
                 albumArt.addClass('active');
-            
                 clearInterval(buffInterval);
                 checkBuffering();
             }
-
             albumName.text(currAlbum);
             trackName.text(currTrackName);
             albumArt.find('img.active').removeClass('active');
             $('#'+currArtwork).addClass('active');
-            
-            
         }
         else
         {
@@ -626,21 +620,13 @@ body
     function initPlayer()
         {        
         audio = new Audio();
-
                 selectTrack(0);
-                
                 audio.loop = false;
-                
-                playPauseButton.on('click',playPause);
-                
+                playPauseButton.on('click',playPause);       
                 sArea.mousemove(function(event){ showHover(event); });
-                
         sArea.mouseout(hideHover);
-        
         sArea.on('click',playFromClickedPos);
-                
         $(audio).on('timeupdate',updateCurrTime);
-
         playPreviousTrackButton.on('click',function(){ selectTrack(-1);} );
         playNextTrackButton.on('click',function(){ selectTrack(1);});
         }
